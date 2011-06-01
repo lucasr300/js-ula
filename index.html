@@ -1,0 +1,194 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script src="jquery-1.6.1.min.js"></script>
+
+<style>
+body {
+	margin: 0;
+	padding: 0;
+}
+#definir_a:hover, #definir_b:hover, #exibir_a:hover, #exibir_b:hover {
+	background: #46B7F0;
+	border-bottom: 2px solid blue;
+}
+.item {
+	font-size: x-large;
+	border-bottom: 2px solid gray;
+	display: block;
+	width: 100%;
+}
+.topo {
+	display:block;
+	width:100%;
+	background: #0D1185;
+	margin-top:0px;
+}
+h2 {
+	color: white;
+}
+.box {
+	display: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class='topo'>
+<h2>Arquitetura de Computadores</h2>
+<button id='okA' onclick='javascript:calc()'>Calcular!</button><br>&nbsp
+</div>
+
+<span class='item' id='definir_a'>Definir A</span><br>
+<div class='box' id='div_definir_a'>
+Entre com o valor de A: <input id='valA' value='0' size='6'>&nbsp<button id='okA' onclick='javascript:definir()'>Ok</button>
+</div>
+
+<span class='item' id='definir_b'>Definir B</span><br>
+<div class='box' id='div_definir_b'>
+Entre com o valor de B: <input id='valB' value='0' size='6'>&nbsp<button id='okB' onclick='javascript:definir()'>Ok</button>
+</div>
+
+<span class='item' id='exibir_a'>Exibir A</span><br>
+<div class='box' id='div_exibir_a'>
+O valor de A é: <span id='sp_valor_a'>0</span>
+</div>
+<span class='item' id='exibir_b'>Exibir B</span><br>
+<div class='box' id='div_exibir_b'>
+O valor de B é: <span id='sp_valor_b'>0</span>
+</div>
+
+<span class='item'  id='definir_op'>Definir Operação</span><br>
+<div class='box' id='div_op'>
+Entre com o código da operação: <input id='op' value='0' size='6'>&nbsp<button id='oOP' onclick='javascript:definir()'>Ok</button><br>
+(1 - Soma; 2 - Subtração; 3 - Multiplicação; 4 - Divisão)
+</div>
+
+<span class='item'>Exibir Flags</span><br>
+
+<script>
+
+var valorA = 0;
+var valorB = 0;
+var op = 0;
+
+function paraDecimal(numeroB){
+	var aux1 = new Array(8);
+	aux1[0] = 1
+	aux1[1] = 2
+	aux1[2] = 4
+	aux1[3] = 8
+	aux1[4] = 16
+	aux1[5] = 32
+	aux1[6] = 64
+	aux1[7] = 128
+
+	var qtd = numeroB.length;
+
+	var ArrBin = new Array(qtd);
+	j = 0
+	for(i = qtd-1; i >= 0; i--){
+		ArrBin[j] = numeroB.substring(i,i+1);
+		j++;
+	}
+
+	var valor = 0;
+	for(i = 0; i< qtd; i++){
+		if(ArrBin[i] > 0){
+			valor += aux1[i]
+		}
+	}
+
+	return valor;
+}
+
+function paraBinario(numeroD){
+
+	dec=numeroD;
+	i=dec;
+	var hit="";
+	while(i >= 1)
+	{
+		var m=(i*10)/4;
+		while(m > 1){m=m-5;};
+		if(m < 0){i=(i-1)/2;hit+="1";}else{i=i/2;hit+="0";};
+		
+	};
+
+	var b ="";
+	var bin;
+	bin=hit.length;
+	for(a=hit.length;a>=0;a--)
+	{
+	b += hit.substring(a-1,a);
+	};
+	return b;
+}
+
+function definir() {
+	valorA = paraDecimal($('#valA').val());
+	valorB = paraDecimal($('#valB').val());
+	op = paraDecimal($('#op').val());
+	atualizar()
+}
+
+function atualizar() {
+	$('#sp_valor_a').html(paraBinario(valorA));
+	$('#sp_valor_b').html(paraBinario(valorB));
+}
+
+function calc() {
+
+	if ( op == 1) {
+		valorA = valorA + valorB;
+	}
+
+
+	if ( op == 2) {
+		valorA = valorA + valorB;
+	}
+
+
+	if ( op == 3) {
+		valorA = valorA + valorB;
+	}
+
+
+	if ( op == 4) {
+		valorA = valorA + valorB;
+	}
+
+	atualizar();
+
+}
+
+$('#definir_a').click(function() {
+	$('#div_definir_a').slideToggle(); 
+});
+
+$('#definir_b').click(function() {
+	$('#div_definir_b').slideToggle(); 
+});
+
+$('#exibir_a').click(function() {
+	$('#div_exibir_a').slideToggle(); 
+	atualizar();
+});
+
+$('#exibir_b').click(function() {
+	$('#div_exibir_b').slideToggle(); 
+	atualizar();
+});
+
+$('#definir_op').click(function() {
+	$('#div_op').slideToggle(); 
+	atualizar();
+});
+
+</script>
+</body>
+
+</html>
