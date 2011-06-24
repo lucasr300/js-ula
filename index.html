@@ -9,7 +9,7 @@ body {
 	margin: 0;
 	padding: 0;
 }
-#definir_a:hover, #definir_b:hover, #exibir_a:hover, #exibir_b:hover {
+#definir_a:hover, #definir_b:hover, #exibir_a:hover, #exibir_b:hover, #definir_op:hover, #exibir_flags:hover	 {
 	background: #46B7F0;
 	border-bottom: 2px solid blue;
 }
@@ -63,20 +63,26 @@ O valor de B é: <span id='sp_valor_b'>0</span>
 
 <span class='item'  id='definir_op'>Definir Operação</span><br>
 <div class='box' id='div_op'>
-Entre com o código da operação: <input id='op' value='0' size='6'>&nbsp<button id='oOP' onclick='javascript:definir()'>Ok</button><br>
-(1 - Soma; 2 - Subtração; 3 - Multiplicação; 4 - Divisão)
+Entre com o código da operação: <input id='op' value='0' size='6'>&nbsp<button id='oOP' onclick='javascript:def_op()'>Ok</button><br>
+(1 - Soma; 10 - Subtração; 11 - Multiplicação; 100 - Divisão)
 </div>
 
-<span class='item'>Exibir Flags</span><br>
+<span class='item' id='exibir_flags'>Exibir Flags</span><br>
+<div class='box' id='div_flags'>
+O valor do registrador de Flags é: <span id='sp_flags'>00000</span>
+</div>
 
 <script>
 
 var valorA = 0;
 var valorB = 0;
 var op = 0;
+var flag_over = 0;
+var flag_div_zero = 0;
+
 
 function paraDecimal(numeroB){
-	var aux1 = new Array(8);
+	var aux1 = new Array(13);
 	aux1[0] = 1
 	aux1[1] = 2
 	aux1[2] = 4
@@ -84,7 +90,12 @@ function paraDecimal(numeroB){
 	aux1[4] = 16
 	aux1[5] = 32
 	aux1[6] = 64
-	aux1[7] = 128
+	aux1[8] = 128
+	aux1[9] = 256
+	aux1[10] = 512
+	aux1[11] = 1024
+	aux1[12] = 2048
+	aux1[13] = 4096
 
 	var qtd = numeroB.length;
 
@@ -103,6 +114,7 @@ function paraDecimal(numeroB){
 	}
 
 	return valor;
+
 }
 
 function paraBinario(numeroD){
@@ -118,6 +130,7 @@ function paraBinario(numeroD){
 		
 	};
 
+	var a;
 	var b ="";
 	var bin;
 	bin=hit.length;
@@ -125,12 +138,31 @@ function paraBinario(numeroD){
 	{
 	b += hit.substring(a-1,a);
 	};
+
+	if (b == '') {
+		b = '0';
+
+	}
+
+	if (b.length > 5) {
+		b = b.substring(b.length-5,b.length);
+		flag_over = 1;
+	} else {
+		flag_over = 0;
+	}
+
 	return b;
 }
 
 function definir() {
+	flag_over = 0;
 	valorA = paraDecimal($('#valA').val());
 	valorB = paraDecimal($('#valB').val());
+	op = paraDecimal($('#op').val());
+	atualizar()
+}
+
+function def_op() {
 	op = paraDecimal($('#op').val());
 	atualizar()
 }
@@ -138,9 +170,13 @@ function definir() {
 function atualizar() {
 	$('#sp_valor_a').html(paraBinario(valorA));
 	$('#sp_valor_b').html(paraBinario(valorB));
+	$('#sp_flags').html(flag_over + '' + flag_div_zero + '' + '0000' );
 }
 
 function calc() {
+
+	flag_div_zero = 0;
+	flag_over = 0;
 
 	if ( op == 1) {
 		valorA = valorA + valorB;
@@ -148,17 +184,20 @@ function calc() {
 
 
 	if ( op == 2) {
-		valorA = valorA + valorB;
+		valorA = valorA - valorB;
 	}
 
 
 	if ( op == 3) {
-		valorA = valorA + valorB;
+		valorA = valorA * valorB;
 	}
 
-
 	if ( op == 4) {
-		valorA = valorA + valorB;
+		if (valorB != 0) {
+			valorA = valorA / valorB;
+		} else {
+			flag_div_zero = 1;
+		}
 	}
 
 	atualizar();
@@ -185,6 +224,11 @@ $('#exibir_b').click(function() {
 
 $('#definir_op').click(function() {
 	$('#div_op').slideToggle(); 
+	atualizar();
+});
+
+$('#exibir_flags').click(function() {
+	$('#div_flags').slideToggle(); 
 	atualizar();
 });
 
